@@ -1,0 +1,5 @@
+packages: 
+    # 匹配 packages/ 目录下的所有子文件夹作为包
+  - 'packages/*'
+     # 匹配 apps/ 目录下的所有子文件夹作为包
+  - 'apps/*'
