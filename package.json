@@ -5,11 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-  "dev:main": "pnpm --filter ./apps/vue-main run dev",
-  "dev:microAppVue": "pnpm --filter ./apps/microAppVue run dev",
-  "dev:microAppVue2": "pnpm --filter ./apps/microAppVue2 run dev",
-  "dev:microAppReact": "pnpm --filter ./apps/microapp-react run dev",
-  "dev:all": "pnpm -r --parallel --filter './apps/*' run dev"
+    "dev:main": "pnpm --filter @micro/host run dev",
+    "dev:vue1": "pnpm --filter @micro/vue1 run dev",
+    "dev:vue2": "pnpm --filter @micro/vue2 run dev",
+    "dev:react": "pnpm --filter @micro/react run dev",
+    "dev:all": "pnpm -r --parallel --filter '@micro/host' --filter '@micro/vue1' --filter '@micro/vue2' --filter '@micro/react' run dev"
   },
   "keywords": [],
   "author": "",

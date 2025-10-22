@@ -1,10 +1,10 @@
 // Helper to register micro apps with Wujie.
 // Accepts an optional router so the caller can perform route-driven mount/unmount behavior.
-export async function registerMicroApps(router) {
+export async function registerMicroApps(router, options = {}) {
   const apps = [
-    { name: 'microAppVue1', url: 'http://localhost:9528', el: '#wujie-microAppVue1', route: '/vue1' },
-    { name: 'microAppVue2', url: 'http://localhost:9529', el: '#wujie-microAppVue2', route: '/vue2' },
-    { name: 'microAppReact', url: 'http://localhost:9530', el: '#wujie-microAppReact', route: '/react' }
+    { name: 'vue1', url: 'http://localhost:9528', el: '#wujie-microAppVue1', route: '/vue1', pkg: '@micro/vue1' },
+    { name: 'vue2', url: 'http://localhost:9529', el: '#wujie-microAppVue2', route: '/vue2', pkg: '@micro/vue2' },
+    { name: 'react', url: 'http://localhost:9530', el: '#wujie-microAppReact', route: '/react', pkg: '@micro/react' }
   ]
 
   // Try to import wujie dynamically; fall back to global window.Wujie
@@ -23,10 +23,11 @@ export async function registerMicroApps(router) {
 
   // expose a global bridge for micro apps to interact with host state
   try {
-    const { globalState, setUser, inc } = await import('./wujie-global')
+    const { globalState, setUser, inc, subscribe, unsubscribe } = await import('./wujie-global')
     // set an example user
     setUser('dev-user')
-    window.__WUJIE_GLOBAL__ = { globalState, setUser, inc }
+    // expose bridge with subscription helpers
+    window.__WUJIE_GLOBAL__ = { globalState, setUser, inc, subscribe, unsubscribe }
   } catch (e) {
     // ignore
   }
@@ -38,11 +39,14 @@ export async function registerMicroApps(router) {
         url: a.url,
         el: a.el,
         // keep alive to speed up switch, set to false if you want full cleanup
-        alive: true,
+        alive: options.alive ?? true,
+        // sandbox / fetch-hook / style isolation are passed through when provided
+        sandbox: options.sandbox,
+        fetch: options.fetchHook,
+        // wujie supports various style isolation flags; we'll forward a hint
+        styleIsolation: options.styleIsolation,
         // props passed to the micro app
-        props: {
-          globalState: { user: 'dev' }
-        },
+        props: Object.assign({ globalState: { user: 'dev' } }, options.defaultProps || {}),
         // lifecycle hooks for debugging/metrics
         beforeLoad: () => console.log(`[wujie] beforeLoad ${a.name}`),
         beforeMount: () => console.log(`[wujie] beforeMount ${a.name}`),
@@ -50,6 +54,9 @@ export async function registerMicroApps(router) {
         beforeUnmount: () => console.log(`[wujie] beforeUnmount ${a.name}`),
         afterUnmount: () => console.log(`[wujie] afterUnmount ${a.name}`)
       }
+
+      // allow passing pnpm package selector as name if provided
+      if (options.usePackageName && a.pkg) opts.name = a.pkg
 
       if (typeof wujie.register === 'function') {
         wujie.register(opts)

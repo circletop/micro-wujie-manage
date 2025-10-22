@@ -25,3 +25,7 @@ if (window.__POWERED_BY_WUJIE__) {
     </React.StrictMode>
   )
 }
+// attempt to initialize when host provided initial state
+if (window.__WUJIE_GLOBAL__ && window.__WUJIE_GLOBAL__.globalState) {
+  // no-op; App will pick up initial state via event or direct access
+}
