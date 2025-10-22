@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.19.0'
+          cache: 'pnpm'
+      - name: Install pnpm
+        run: npm i -g pnpm
+      - name: Install
+        run: pnpm install
+      - name: Build vue-main
+        run: pnpm --filter ./apps/vue-main build
+      - name: Build microAppVue
+        run: pnpm --filter ./apps/microAppVue build
+      - name: Build microAppVue2
+        run: pnpm --filter ./apps/microAppVue2 build
+      - name: Build microapp-react
+        run: pnpm --filter ./apps/microapp-react build

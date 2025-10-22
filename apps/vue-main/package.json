@@ -8,4 +8,8 @@
     "build": "vite build",
     "preview": "vite preview"
   }
+  ,"dependencies":{
+    "wujie": "^1.0.29",
+    "vue-router": "^4.5.1"
+  }
 }

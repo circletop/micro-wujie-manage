@@ -27,6 +27,7 @@ pnpm --filter 'packages/*' build
 pnpm -r test
 ```
 
+
 ## PNPM 命令常用技巧
 
 ## 常用命令
@@ -71,3 +72,38 @@ pnpm add @my-monorepo/package-a
 ```
 
 ####
+
+## 微前端（Wujie）本地开发指南
+
+此仓库包含一个主应用（`apps/vue-main`）与多个微应用（`apps/microAppVue`, `apps/microAppVue2`, `apps/microapp-react`）。我们使用 Wujie 作为微前端运行时。
+
+本地启动步骤：
+
+1. 在根目录安装依赖：
+
+```bash
+pnpm install
+```
+
+1. 并行启动所有服务（或单独启动其中任意一个）：
+
+```bash
+pnpm run dev:all
+# 或者分别运行
+pnpm run dev:main
+pnpm run dev:microAppVue
+pnpm run dev:microAppVue2
+pnpm run dev:microAppReact
+```
+
+1. 打开主应用： [http://localhost:9527](http://localhost:9527)
+
+调试提示：
+
+- 如果主应用页面未能挂载某个微应用，检查相应子应用是否已成功启动（检查子应用 dev server 输出），并确认端口是否正确。
+- 如果使用了代理或自定义域名，确保 `wujie-register.js` 中的 URL 与实际可访问地址一致。
+
+## CI
+
+仓库包含一个简单的 GitHub Actions workflow (`.github/workflows/ci.yml`) 用于在 PR/推送到 main 时执行 pnpm install 并对各子应用运行 `vite build` 来保证构建不报错。
+

@@ -5,15 +5,19 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev:main": "pnpm --filter vue_main dev",
-    "dev:microAppVue": "pnpm --filter microAppVue dev"
+  "dev:main": "pnpm --filter ./apps/vue-main run dev",
+  "dev:microAppVue": "pnpm --filter ./apps/microAppVue run dev",
+  "dev:microAppVue2": "pnpm --filter ./apps/microAppVue2 run dev",
+  "dev:microAppReact": "pnpm --filter ./apps/microapp-react run dev",
+  "dev:all": "pnpm -r --parallel --filter './apps/*' run dev"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.12.1",
   "dependencies": {
-    "vue": "^3.5.18"
+    "vue": "^3.5.18",
+    "wujie": "^1.0.29"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.1",
